@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plan Natalii — bieganie + siłownia</title>
+<style>
+:root{--bg:#f5f6f0;--paper:#fff;--ink:#1c2b22;--muted:#617067;--line:#dce2d8;--green:#2f6f4e;--easy:#e4efe7;--quality:#f4e1ce;--long:#e0e7f2;--gym:#f2dfbd;--rest:#eceee9;--accent:#b5541e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,sans-serif;padding:0 18px 72px}.wrap{max-width:1020px;margin:auto}
+header{padding:48px 0 28px;border-bottom:1px solid var(--line)}.eyebrow{color:var(--green);font:12px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.06em}h1,h2,h3{font-family:Georgia,serif;font-weight:500;line-height:1.1}h1{font-size:clamp(34px,6vw,58px);max-width:650px;margin:12px 0}.lead{font-size:18px;color:var(--muted);max-width:720px}.stats{display:flex;gap:28px;flex-wrap:wrap;margin-top:26px}.stat b{display:block;color:var(--green);font:28px Georgia,serif}.stat span{font-size:12px;color:var(--muted)}
+.wrap>section.today{margin:24px 0;background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--accent);padding:17px 20px;border-radius:6px}.today small{color:var(--muted);font:12px ui-monospace,monospace}.today h3{margin:5px 0;font-size:24px}.today p{margin:0;color:var(--muted)}
+nav{display:flex;gap:24px;border-bottom:1px solid var(--line);margin:18px 0 32px;overflow:auto}nav button{border:0;background:none;padding:13px 2px;color:var(--muted);font:14px ui-monospace,monospace;white-space:nowrap;cursor:pointer;border-bottom:2px solid transparent}nav button.active{color:var(--ink);border-color:var(--green)}.panel{display:none}.panel.active{display:block}
+h2{font-size:32px;margin:0 0 8px}.intro{color:var(--muted);max-width:760px}.legend{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 26px}.legend span,.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 10px;font-size:12px}.legend i{width:9px;height:9px;border-radius:50%;display:inline-block}.easy{background:var(--easy)}.quality{background:var(--quality)}.long{background:var(--long)}.gym{background:var(--gym)}.rest{background:var(--rest)}
+details{background:var(--paper);border:1px solid var(--line);border-radius:6px;margin:10px 0;overflow:hidden}summary{cursor:pointer;list-style:none;padding:15px 18px;display:flex;justify-content:space-between;gap:15px;align-items:center}summary::-webkit-details-marker{display:none}.week-title{font:14px ui-monospace,monospace}.week-meta{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;padding:0 12px 14px}.day{min-height:105px;border:1px solid var(--line);border-radius:5px;padding:9px;cursor:pointer;transition:.15s}.day:hover{transform:translateY(-1px);box-shadow:0 3px 12px #26382b12}.day .dow{font:11px ui-monospace,monospace;color:var(--muted);text-transform:uppercase}.day .date{font-size:12px;color:var(--muted)}.day strong{display:block;margin:6px 0;font-size:13px;line-height:1.25}.day em{font-style:normal;font-size:11px;color:var(--muted)}.day.checked{opacity:.55}.day.checked strong{text-decoration:line-through}.day.today{outline:2px solid var(--accent);outline-offset:-2px}.phase{margin-top:34px;color:var(--green);font:12px ui-monospace,monospace;text-transform:uppercase;letter-spacing:.04em}
+.text-card{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;margin:14px 0}.text-card h3{font-size:23px;margin:0 0 10px}.text-card p{margin:8px 0;color:var(--muted)}ul{color:var(--muted);padding-left:20px}.hr{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}.hr div{padding:12px;border-radius:5px}.hr b{display:block}.note{font-size:13px;color:var(--muted);border-left:3px solid var(--accent);padding-left:12px}
+#modal{position:fixed;inset:0;background:#10201688;display:none;align-items:center;justify-content:center;padding:18px;z-index:5}#modal.show{display:flex}.modalbox{background:var(--paper);max-width:600px;width:100%;max-height:88vh;overflow:auto;border-radius:8px;padding:24px;box-shadow:0 20px 60px #0003}.modalhead{display:flex;justify-content:space-between;gap:20px}.close{border:0;background:var(--rest);border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:20px}.modalbox h2{margin:4px 0 12px}.modalbox p{color:var(--muted)}
+@media(max-width:720px){body{padding:0 10px 50px}.grid{grid-template-columns:repeat(2,1fr)}.day{min-height:95px}.day:nth-child(7){grid-column:span 2}.stats{gap:18px}.today h3{font-size:21px}}
+/* readable calendar cards */
+:root{--easy:#df5800;--gym:#082567;--rest:#e8e9e4}
+.run{background:#df5800;color:#fff}.run .dow,.run .date,.run em{color:#fff}.gym{background:#082567;color:#f2fbff}.gym .dow,.gym .date,.gym em{color:#d3e8ef}.rest{background:#e8e9e4}.event{background:#b52d59;color:#fff}.event .dow,.event .date,.event em{color:#ffe8ef}.milestone{color:#b52d59;font:12px ui-monospace,monospace;margin-left:10px}
+.day strong{margin:6px 0 3px}.day b{display:block;font-size:13px}.day em{display:block;margin-top:3px}.day.today{outline-color:#d1373f}
+.day.run.optional{background:rgba(223,88,0,.36);color:#6b2700;border-color:rgba(223,88,0,.45)}.day.run.optional .dow,.day.run.optional .date{color:#6b2700}
+.day.gym.optional{background:rgba(8,37,103,.36);color:#082567;border-color:rgba(8,37,103,.45)}.day.gym.optional .dow,.day.gym.optional .date{color:#082567}
+#modalText{white-space:pre-line}
+#modalText:has(.exercise-table){white-space:normal;overflow-x:auto;margin-top:12px}
+.modalbox:has(.exercise-table){max-width:800px}
+.exercise-table{width:100%;min-width:540px;border-collapse:collapse;font-size:14px}
+.exercise-table th,.exercise-table td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.exercise-table th{font-size:12px;color:var(--muted);background:var(--bg);font-weight:600}
+.exercise-table th:first-child{width:32%}.exercise-table th:nth-child(4){width:9%}
+.exercise-table tbody tr:last-child td{border-bottom:0}
+</style></head>
+<body><main class="wrap">
+<header><div class="eyebrow">42 tygodnie · start 28 września 2026</div><h1>Najpierw zbudujmy bazę.</h1><p class="lead">Prosty plan Natalii: dwa spokojne biegi na początku, potem trzy. Wtorkowa siłownia z naciskiem na nogi i środowa góra ciała razem obejmują główne partie; lekki piątek jest tylko dodatkiem. Zimą bez treningów podbiegów. Teren wprowadzamy wiosną, a start na 33 km pozostaje warunkowy.</p><div class="stats"><div class="stat"><b>2 → 3</b><span>spokojne biegi / tydzień</span></div><div class="stat"><b>2 + opcja</b><span>siłownia / tydzień</span></div><div class="stat"><b>33 km</b><span>cel tylko po ocenie gotowości</span></div></div></header>
+<section class="today"><small>DZISIAJ / NAJBLIŻSZY TRENING</small><h3 id="todayTitle">Ładowanie…</h3><p id="todayText"></p></section>
+<nav><button class="active" data-tab="calendar">Kalendarz</button><button data-tab="running">Bieganie</button><button data-tab="strength">Siłownia</button></nav>
+<section id="calendar" class="panel active"><h2>Kalendarz treningowy</h2><p class="intro">Kliknij kafelek, żeby zobaczyć szczegóły treningu.</p><div class="legend"><span><i style="background:var(--easy)"></i>Bieganie</span><span><i style="background:var(--gym)"></i>Siłownia</span><span><i style="background:var(--rest)"></i>Odpoczynek</span></div><div id="calendarBody"></div></section>
+<section id="running" class="panel"><h2>Bieganie — założenia</h2><p class="intro">Garmin pokazał 16 biegów i około 57,5 km w ostatnich trzech miesiącach; ostatnie pełne 10 km trwało około 1:29 przy średnim HR 170. Dlatego priorytetem jest regularność, nie szybkość. Zakres 135–150 BPM jest roboczy (HR max 190, spoczynkowe 65); test rozmowy ma pierwszeństwo przed pomiarem z nadgarstka.</p><div class="hr"><div class="easy"><b>Zwykły bieg</b>135–150 BPM · swobodna rozmowa</div><div class="quality"><b>Długi bieg</b>135–150 BPM · można przeplatać marszem</div><div class="long"><b>Pod górę od maja</b>według oddechu · bez gonienia tętna</div></div><div class="text-card"><h3>Jak działa ten plan</h3><ul><li>poniedziałek: krótki spokojny bieg; sobota: spokojny, stopniowo dłuższy bieg; przez pierwsze cztery tygodnie czwartkowy bieg jest opcjonalny, potem staje się regularny;</li><li>jesień i zima: bez interwałów, tempa oraz zaplanowanych podbiegów; wybieraj bezpieczną nawierzchnię;</li><li>od końca marca łagodne ścieżki TPK, a od maja nieliczne krótkie podbiegi wykonywane spokojnie;</li><li>co około cztery tygodnie lżejszy tydzień; opuszczonych treningów nie nadrabiaj;</li><li>jeśli tętno rośnie mimo zwolnienia, stosuj marszobieg — celem pozostaje swobodny wysiłek.</li></ul><p class="note">Gdy utrzymuje się ból, narastające zmęczenie albo łatwe bieganie przestaje być łatwe, skróć trening lub powtórz poprzedni tydzień. Czas na kafelku obejmuje także odcinki marszu.</p></div><div class="text-card"><h3>Cele i decyzje</h3><p><b>Grudzień 2026:</b> regularność. Garmin Ultra Race Gdańsk 12 km to start treningowy, nie sprawdzian szybkości. Trasa jest terenowa, a limit edycji 2026 wynosi 2 godziny. Komfortowe 70 min biegu/marszobiegu w listopadzie to tylko minimalny sygnał, nie gwarancja zmieszczenia się w limicie. Jeśli ta baza nie powstała, rozważ 6 km (jeżeli można zmienić zapis) lub rezygnację ze startu.</p><p><b>Marzec 2027:</b> trzy powtarzalne biegi tygodniowo i długi bieg około 90 min bez bólu oraz bez wyczerpania następnego dnia. To ważniejsze niż wynik na 10 km.</p><p><b>Maj–czerwiec 2027:</b> spokojne 2–2,5 godziny na nogach, stopniowe oswajanie TPK, picie i jedzenie podczas dłuższych wyjść. Podbiegi to mały dodatek, a nie główny trening.</p><p><b>Lipiec 2027:</b> Golden Mountains Trail 33 km / około +1500 m jest celem warunkowym, nie obietnicą. Przy obecnej bazie nie traktuj go jako domyślnego startu. Na początku czerwca oceń regularność, tolerancję 2–2,5 godziny w terenie i realne szanse zmieszczenia się w limicie; jeśli baza nie powstała, wybierz krótszy start lub przesuń cel na kolejny sezon. Data 16.07.2027 pozostaje założeniem planu, nie potwierdzonym terminem organizatora.</p></div><div class="text-card"><h3>Lżejsze tygodnie i odpoczynek</h3><p><b>Lżejszy tydzień:</b> mniej minut biegania, bez mocnej siłowni. To część budowania formy, nie cofnięcie.</p><p><b>Po zawodach:</b> wracaj tylko wtedy, gdy nogi są gotowe; wolno pominąć każdy bieg w tygodniu po starcie.</p><p><b>Przed ważnym startem:</b> krótsze biegi i więcej odpoczynku. Ostatnie tygodnie nie służą nadrabianiu zaległości.</p></div><div class="text-card"><h3>TPK zamiast gór</h3><p>Do wiosny nie ma obowiązkowych podbiegów ani docelowego przewyższenia. Od końca marca wybieraj łagodne, bezpieczne ścieżki; od maja dodaj krótkie podbiegi i schodź spokojnie w dół. Jeśli nawierzchnia jest śliska albo nogi zmęczone, zrób zwykły łatwy bieg. Nie trzeba „zbierać metrów” za wszelką cenę.</p><p class="note">Warunki i regulaminy sprawdzaj u organizatorów: <a href="https://ultrarace.pl/gdansk/">Garmin Ultra Race Gdańsk</a> i <a href="https://dfbg.pl/trasy-biegow/golden-mountains-trail">Golden Mountains Trail</a>.</p></div></section>
+<section id="strength" class="panel">
+<h2>Siłownia — mocniejsza baza, dwa główne treningi</h2>
+<p class="intro">Największa praca nóg we wtorek; środa to góra i tułów. A/B razem obejmują główne partie. Piątek jest dodatkiem, nie warunkiem kompletności planu. W szczegółach dni jest tylko tabela ćwiczeń; wszystkie zasady są tutaj. Bieganie pozostaje bez zwiększania względem poprzedniej wersji.</p>
+<div class="text-card"><h3>Pierwsze tygodnie — umiarkowanie mocniej</h3><ul>
+<li><b>Tydzień 1:</b> przysiad 3 serie, pozostałe ćwiczenia A po 2; w B ściąganie drążka 3 serie, pozostałe po 2. Razem 24 serie robocze A/B, lepiej rozłożone między partie.</li>
+<li><b>Tydzień 2:</b> RDL i środowe wyciskanie rosną do 3 serii. Razem 26 serii A/B.</li>
+<li><b>Tydzień 3:</b> wspięcia na palce rosną do 3 serii. Razem 27 serii A/B.</li>
+<li><b>Tydzień 4:</b> dwa krótsze treningi, razem 15 serii, zamiast prawie całego tygodnia bez siłowni.</li>
+<li><b>Tydzień 5:</b> wróć do dawki z tygodnia 2. Tygodnie 6–7: dawka z tygodnia 3. Tydzień 8: ponowne odciążenie.</li>
+</ul><p class="note">To dawki docelowe, nie obowiązek za wszelką cenę. Kolejną serię dodaj tylko, jeśli po poprzedniej sesji nie było bólu, bolesność nie zmienia kroku biegowego i łatwe biegi nadal są łatwe. W przeciwnym razie zostań przy 2 seriach albo powtórz poprzednią dawkę. Przy nowej technice lub powrocie po przerwie także zacznij od 2. Nie zwiększaj równocześnie liczby serii i ciężaru.</p></div>
+<div class="text-card"><h3>Wtorek · całe ciało z naciskiem na nogi</h3><p>Trening A · zwykle 50–60 min z rozgrzewką. Goblet squat, martwy ciąg rumuński, wyciskanie hantli na ławce, wiosłowanie na wyciągu, wspięcia na palce i plank. W pierwszym tygodniu zostaw 3–4 poprawne powtórzenia w zapasie. Później w ćwiczeniach nóg zwykle 2–3, ale we wtorkowym wyciskaniu i wiosłowaniu około 4, bo część góry ćwiczysz ponownie w środę.</p><p>Łydki zaczynają od masy ciała. Jeśli górny zakres powtórzeń jest zbyt łatwy, dobierz niewielkie dodatkowe obciążenie, zachowując kontrolę i zakładany zapas. Nie dodawaj go w tym samym tygodniu co trzecią serię.</p></div>
+<div class="text-card"><h3>Środa · góra i tułów, mniej dodatków</h3><p>Trening B · 35–45 min. Ściąganie drążka, wyciskanie hantli na ławce, unoszenie hantli bokiem, uginanie ramion i plank bokiem. Wyciskanie na klatkę zastępuje żołnierskie; usunięta została osobna izolacja tricepsa, który pracuje przy wyciskaniach. Klatka ma 4 serie w tygodniu 1, potem 5 w zwykłych tygodniach budowania.</p><p>Bez bułgarów, swingów i ciężkich nóg. Zapas około 3 powtórzeń, w pierwszym tygodniu 3–4. Gdy po wtorku barki, klatka lub plecy pozostają obolałe albo wyraźnie spada siła, ogranicz wyciskanie i przyciąganie do 1–2 serii lub odpocznij. Zmiana dnia nie oznacza pełnej regeneracji tych samych mięśni.</p></div>
+<div class="text-card"><h3>Piątek · opcjonalnie dopiero po pierwszym miesiącu</h3><p>W tygodniach 1–4 piątek jest wolny. Od tygodnia 5 skrócony C można wykonać tylko przy pełnej świeżości: lekkie wyciskanie na maszynie, wiosłowanie z podparciem i plank, 20–25 min. Co najmniej 5 powtórzeń w zapasie, plank 20 s. Bez ciężkich nóg i bez nadrabiania A/B.</p><p>Nie ma C w lżejszych tygodniach, w tygodniach 9–12 oraz od tygodnia 33. Możesz pominąć go przez cały plan — główne partie pozostają w A/B.</p></div>
+<div class="text-card"><h3>Rozgrzewka i progresja</h3><p>Przed sesją: 5–7 min spokojnego marszu lub rowerka i ruchów ramion/bioder. Przed pierwszym przysiadem, ciągiem, wyciskaniem i przyciąganiem wykonaj 1–2 krótkie serie bardzo lekkim ciężarem. Nie wliczaj ich do serii roboczych. Podane czasy sesji obejmują rozgrzewkę.</p><p>Ciężary „do ustalenia” dobierz do zakresu powtórzeń i zapasu opisanego powyżej, nie do tętna. Najpierw zwiększaj powtórzenia. Po dwóch zwykłych sesjach przy górnej granicy we wszystkich seriach, z dobrą techniką i docelowym zapasem, zwiększ ciężar o najmniejszy rozsądny stopień i wróć do dolnej granicy. Gdy skok sprzętu jest za duży, zostań przy obecnym ciężarze. Zapisuj ciężar, powtórzenia i zapas. Sesje lżejsze nie kwalifikują do zwiększania ciężaru.</p><p>Nie dodawaj kolejnych serii ponad tabelę. W planku wydłużaj czas tylko do górnej granicy; kończ przed utratą pozycji. Jedna seria planku bokiem obejmuje obie strony. Od tygodnia 27, gdy rośnie obciążenie biegania i terenu, zwykle po 2 serie w A/B — priorytetem jest utrzymanie siły.</p></div>
+<div class="text-card"><h3>Odciążenie i zawody — krócej, ale konsekwentnie</h3><p><b>Tygodnie 4, 8, 16, 20, 24, 28, 32 i 36:</b> oba treningi A/B pozostają, ale mają łącznie 15 serii. Zapas 4–5 powtórzeń, bez progresji, piątek wolny. To około 40–45% mniej serii niż w pełnym bloku budowania; po wejściu w teren około 30% mniej.</p><p><b>Tydzień 9:</b> A/B po 2 serie, zapas około 4; bez nowości i rekordów. <b>Tydzień 10 — zawody:</b> bez siłowni, piątek regeneracyjny. <b>Tydzień 11:</b> wtorek i piątek wolne; środowa góra po 1 serii tylko opcjonalnie, gdy sen i codzienne funkcjonowanie wróciły do normy i nie ma bólu ani wyraźnego zmęczenia. Zapas co najmniej 5 powtórzeń. <b>Tydzień 12:</b> A/B po 2 serie tylko po regeneracji. Jeśli objawy utrzymują się, nie wracaj na siłę.</p><p><b>Tygodnie 38–40:</b> tylko lekka wtorkowa sesja po 1 serii, zapas co najmniej 5. <b>Tygodnie 41–42:</b> bez siłowni. Ostatnie tygodnie przed warunkowym 33 km nadal chronią regenerację. Niczego nie nadrabiaj.</p></div>
+<div class="text-card"><h3>Baza ćwiczeń i sygnały do zmniejszenia dawki</h3><p>Nie zmieniaj zestawu co tydzień. Pierwszy przegląd po 6–8 tygodniach; przed grudniowym startem bez nowych ćwiczeń nóg. Od tygodnia 13, po regeneracji, można zastąpić goblet squat wykrokiem w tył z podparciem: 1–2 lekkie serie po 8–10 na nogę, przerwa 90–120 s, zapas 4 powtórzeń. Zamiana zastępuje przysiad, nie jest dodatkowym ćwiczeniem. Zapisuj wyniki osobno i utrzymaj wariant przez 6–8 tygodni.</p><p>W tygodniu 21 można rozważyć wiosłowanie z podparciem klatki zamiast wyciągu: 2×8–12, przerwa 90 s. W tygodniu 29 oceń bazę przy wejściu w teren, bez nowych ćwiczeń nóg. Jeśli ćwiczenia pasują i dają postęp, nie ma obowiązku ich wymiany.</p><p>Jeżeli bolesność zmienia krok biegowy, łatwe biegi stale są cięższe albo narasta zmęczenie, pomiń C i cofnij zwiększenie serii nóg. Nie czekaj na lżejszy tydzień. Przy ostrym bólu lub bólu stawu przerwij ćwiczenie; nieznaną technikę sprawdź z trenerem. Ciężarów nie da się rzetelnie wyznaczyć z samych zapisów Garmina.</p><p class="note">Zasady oparte na <a href="https://acsm.org/resistance-training-guidelines-update-2026/">zaleceniach ACSM</a>. Konkretne dawki są propozycją pod bieganie Natalii, nie wynikiem badania siły ani oceny techniki.</p></div>
+</section>
+</main><div id="modal"><div class="modalbox"><div class="modalhead"><div><div class="eyebrow" id="modalDay"></div><h2 id="modalTitle"></h2></div><button class="close" aria-label="Zamknij">×</button></div><div id="modalText"></div></div></div>
+<script>
+const start=new Date('2026-09-28T00:00:00');
+const run=(name,target,description,optional=false)=>({type:'Bieganie',name,target,description,optional});
+const gym=(name,target,description,optional=false)=>({type:'Siłownia',name,target,description,optional});
+const rest=(description='Pełny odpoczynek. Bez zaplanowanego treningu.')=>({type:'Odpoczynek',name:'Odpoczynek',target:'Bez treningu',description,optional:false});
+const race=(name,target,description)=>({type:'Zawody',name,target,description,optional:false});
+const easy=(minutes)=>run('Łatwy',minutes+' min · 135–150 BPM','Przez '+minutes+' min biegnij lub przeplataj bieg marszem w tempie swobodnej rozmowy. Zakres 135–150 BPM jest orientacyjny na płaskim; jeśli oddech przyspiesza, zwolnij lub przejdź na chwilę do marszu. Podany czas obejmuje cały trening.');
+const optionalEasy=(minutes)=>run('Łatwy (opcjonalnie)',minutes+' min · 135–150 BPM','Ten trzeci bieg tygodnia zrób tylko, jeśli po poniedziałku i siłowni czujesz się dobrze. Przez '+minutes+' min biegnij albo przeplataj bieg marszem w tempie swobodnej rozmowy. Jeśli oddech przyspiesza, zwolnij. Pominiętego treningu nie odrabiaj.',true);
+const long=(minutes,terrain=false)=>run('Długi',minutes+' min · 135–150 BPM'+(terrain?' · TPK':''),'Przez '+minutes+' min poruszaj się spokojnie, wolniej niż na zwykłym biegu. Marsz jest częścią treningu. '+(terrain?'Wybierz bezpieczne, łagodne ścieżki TPK; podejścia pokonuj marszem, a zbiegi powoli. Nie ma obowiązkowego przewyższenia. ':'Wybierz prostą, bezpieczną trasę. ')+(minutes>=90?'Weź wodę i przećwicz picie oraz przyjmowanie jedzenia podczas biegu. ':'')+'Całość, łącznie z marszem, mieści się w podanym czasie.');
+const hills=(minutes,count,work)=>run('Łatwy + podbiegi',minutes+' min · 135–150 BPM · '+count+'×'+work+' min pod górę','Cały trening trwa '+minutes+' min. Zacznij od 10 min bardzo łatwo. Następnie wykonaj '+count+' łagodne podbiegi po '+work+' min, w tempie pozwalającym kontrolować oddech, bez sprintu. Po każdym zejdź spokojnie w dół; pozostały czas biegnij łatwo. 135–150 BPM dotyczy płaskich odcinków — na górce kieruj się oddechem. Gdy jest ślisko lub nogi są zmęczone, zamiast podbiegów zrób zwykły łatwy bieg przez '+minutes+' min.');
+const gur=race('Garmin Ultra Race','12 km','05.12.2026 · Start treningowy w TPK, około +250 m. Zacznij spokojnie; na podejściach maszeruj, a na zbiegach nie przyspieszaj na siłę. Edycja 2026 ma limit 2 godzin na 12 km. Jeśli listopadowe długie biegi nie były komfortowe, rozważ krótszy dystans albo rezygnację. Po starcie odpocznij, niezależnie od wyniku.');
+const golden=race('Golden Mountains Trail','33 km','Planowany 16.07.2027 — termin edycji 2027 wymaga potwierdzenia. Około +1500 m. Ten start jest warunkowy: jeśli do czerwca nie ma stabilnej bazy, komfortowych dłuższych wyjść w TPK i realnej szansy zmieszczenia się w limicie, wybierz krótszy dystans lub nie startuj. Jeżeli startujesz, maszeruj na stromych podejściach i korzystaj ze sprawdzonego jedzenia oraz picia.');
+const weekMinutes=[
+  [25,25,40], [25,30,45], [30,30,50], [25,25,40],
+  [30,30,55], [30,35,60], [35,35,70], [25,30,50],
+  [30,25,60], [25,20,0], [0,20,35], [25,25,45],
+  [30,30,55], [30,35,60], [35,35,65], [25,30,50],
+  [35,35,70], [35,40,75], [40,40,80], [30,30,60],
+  [40,40,80], [40,45,85], [45,45,90], [35,35,65],
+  [45,45,90], [45,45,95], [45,45,95], [35,40,75],
+  [45,45,100], [45,45,105], [45,50,110], [40,40,85],
+  [45,45,115], [45,50,120], [50,50,125], [40,40,90],
+  [45,45,135], [35,40,100], [45,45,150], [35,35,90],
+  [25,25,55], [0,20,0]
+];
+const terrainWeeks=new Set([27,29,31,33,35,37,39]);
+const optionalRunWeeks=new Set([1,2,3,4]);
+const hillsByWeek={33:[3,1],35:[4,1],37:[3,2]};
+const specialRuns={10:{saturday:gur},11:{monday:rest()},42:{saturday:rest()}};
+const weeklyRunPlan=Object.fromEntries(weekMinutes.map(([mon,thu,sat],index)=>{
+  const week=index+1;
+  const hill=hillsByWeek[week];
+  return [week,{
+    monday:mon?easy(mon):rest(),
+    thursday:hill?hills(thu,hill[0],hill[1]):optionalRunWeeks.has(week)?optionalEasy(thu):easy(thu),
+    saturday:sat?long(sat,terrainWeeks.has(week)):rest(),
+    ...(specialRuns[week]||{})
+  }];
+}));
+const trainingByDate=Object.create(null);
+const dateKey=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+const put=(d,training)=>{trainingByDate[dateKey(d)]=training};
+const strengthExercises={
+  squat:{name:'Goblet squat — przysiad z hantlem przy klatce',reps:'8–10 powtórzeń',rest:'90–120 s',muscles:'przód ud, pośladki, przywodziciele',cue:'Całe stopy na ziemi, kolana zgodnie z kierunkiem palców. Schodź tylko do głębokości, którą kontrolujesz.'},
+  rdl:{name:'Martwy ciąg rumuński (RDL)',reps:'8–10 powtórzeń',rest:'120 s',muscles:'tył ud i pośladki; grzbiet stabilizuje',cue:'Lekko ugnij kolana i cofnij biodra. Ciężar blisko nóg, bez zaokrąglania pleców. Nie musisz dotykać podłogi.'},
+  press:{name:'Wyciskanie hantli na ławce płaskiej',reps:'8–12 powtórzeń',rest:'90–120 s',muscles:'klatka, triceps, przednia część barków',cue:'Stopy stabilnie na ziemi. Opuszczaj hantle spokojnie, bez odbijania, w bezbolesnym zakresie.'},
+  row:{name:'Wiosłowanie na wyciągu dolnym',reps:'8–12 powtórzeń',rest:'90 s',muscles:'plecy, tylna część barków, biceps',cue:'Przyciągaj uchwyt do dolnych żeber, bez bujania tułowiem i unoszenia barków do uszu.'},
+  calf:{name:'Wspięcia na palce stojąc z podparciem',reps:'12–15 powtórzeń',rest:'60–90 s',muscles:'łydki',cue:'Obunóż, z podparciem dłoni. Unieś i powoli opuść pięty, bez sprężynowania. Zacznij od masy ciała.'},
+  plank:{name:'Plank — podpór na przedramionach',reps:'20–40 s',rest:'60 s',muscles:'brzuch i stabilizacja tułowia',cue:'Łokcie pod barkami, spokojny oddech. Skończ wcześniej, jeśli biodra opadają lub wstrzymujesz oddech.'},
+  pulldown:{name:'Ściąganie drążka wyciągu górnego do klatki',reps:'8–12 powtórzeń',rest:'90 s',muscles:'plecy i biceps',cue:'Drążek przed głową, w kierunku górnej części klatki. Bez szarpania i mocnego odchylania tułowia.'},
+  overhead:{name:'Wyciskanie żołnierskie',reps:'8–10 powtórzeń',rest:'90–120 s',muscles:'barki i triceps',cue:'Wyciskaj lekki gryf, bez wybicia nogami i odchylania lędźwi. To kontrolowany ruch, nie wyrzut sztangi.'},
+  lateral:{name:'Unoszenie hantli bokiem',reps:'12–15 powtórzeń',rest:'60 s',muscles:'boczna część barków',cue:'Łokcie lekko ugięte; unoś ramiona do około wysokości barków, bez zamachu.'},
+  curl:{name:'Uginanie ramion z supinacją',reps:'10–12 powtórzeń',rest:'60 s',muscles:'biceps',cue:'Łokcie przy tułowiu. Podczas unoszenia obracaj dłonie ku górze, opuszczaj spokojnie.'},
+  triceps:{name:'Prostowanie ramion na wyciągu górnym',reps:'10–12 powtórzeń',rest:'60 s',muscles:'triceps',cue:'Łokcie przy tułowiu, bez kołysania ciałem. To jednoznaczny wariant ćwiczenia tricepsa ze zdjęcia.'},
+  sidePlank:{name:'Plank bokiem',reps:'20–30 s na stronę',rest:'30 s między stronami, 60 s między seriami',muscles:'boczna część tułowia i stabilizacja biodra',cue:'Jedna seria obejmuje obie strony. Łokieć pod barkiem, biodra uniesione. Łatwiejsza wersja: podpór na ugiętych kolanach.'},
+  machinePress:{name:'Wyciskanie na klatkę na maszynie',reps:'10–12 powtórzeń',rest:'60–90 s',muscles:'klatka, triceps, przednia część barków',cue:'Uchwyty na wysokości klatki, plecy przy oparciu. Wybierz wyraźnie lekki ciężar.'},
+  supportedRow:{name:'Wiosłowanie z podparciem klatki',reps:'10–12 powtórzeń',rest:'60–90 s',muscles:'plecy, tylna część barków, biceps',cue:'Klatka oparta na ławce lub maszynie. Bez szarpania i unoszenia tułowia.'}
+};
+const strengthProgression='Najpierw dodawaj powtórzenia w podanym zakresie. Po dwóch zwykłych sesjach przy górnej granicy we wszystkich seriach, z dobrą techniką i docelowym zapasem, zwiększ ciężar o najmniejszy rozsądny stopień i wróć do dolnej granicy. Przy dodaniu serii nie zwiększaj równocześnie ciężaru. Zapisuj ciężar, powtórzenia i zapas. W planku wydłużaj czas tylko do górnej granicy bez utraty pozycji. Nie musisz poprawiać wyniku co tydzień.';
+const strengthTemplates={
+  main:{name:'Całe ciało · nogi',target:'50–60 min',optional:false,sets:2,exercises:['squat','rdl','press','row','calf','plank'],intro:'Trening A. Główna praca nóg we wtorek. Wyciskanie i wiosłowanie umiarkowanie: zapas 4 powtórzeń, bo góra pracuje też jutro.',effort:'W pierwszym tygodniu zapas 3–4 poprawnych powtórzeń. Od drugiego tygodnia nogi 2–3, wtorkowa góra około 4. Nigdy do upadku.',progress:strengthProgression},
+  upper:{name:'Góra i tułów',target:'35–45 min',optional:false,sets:2,exercises:['pulldown','press','lateral','curl','sidePlank'],intro:'Trening B. Drugie wyciskanie na klatkę zamiast żołnierskiego; bez osobnej izolacji tricepsa i bez ciężkich nóg. Jeśli po wtorku góra pozostaje obolała lub siła wyraźnie spada, ogranicz wyciskanie i przyciąganie do 1–2 serii albo odpocznij.',effort:'Zapas około 3 poprawnych powtórzeń; w pierwszym tygodniu 3–4. W podporach kończ przed utratą pozycji.',progress:strengthProgression},
+  optional:{name:'Lekko (opcjonalnie)',target:'20–25 min',optional:true,sets:2,exercises:['machinePress','supportedRow','plank'],intro:'Skrócony C, tylko przy pełnej świeżości. Bez nóg, bez nadrabiania A/B. Pominięcie piątku nie usuwa żadnej głównej partii z planu.',effort:'Co najmniej 5 powtórzeń w zapasie. Plank 20 s.',progress:'Bez dokładania serii i rekordów.'},
+  light:{name:'Całe ciało · lekko',target:'20–30 min',optional:false,sets:1,exercises:['squat','rdl','press','row','calf','sidePlank'],intro:'Jedna lekka sesja przy najdłuższych biegach lub przygotowaniu do końcowego startu. Bez dodatkowych ćwiczeń.',effort:'Dolna granica powtórzeń, co najmniej 5 w zapasie; w razie potrzeby zmniejsz ciężar.',progress:'Bez progresji i bez nadrabiania.'},
+  recovery:{name:'Góra · powrót (opcjonalnie)',target:'15–25 min',optional:true,sets:1,exercises:['pulldown','press','lateral','curl','sidePlank'],intro:'Opcjonalna środa po zawodach. Wyłącznie gdy codzienne czynności są bez bólu, sen wrócił do normy i nie ma wyraźnego zmęczenia. W przeciwnym razie odpoczynek. Bez treningu nóg.',effort:'Co najmniej 5 powtórzeń w zapasie; nie testuj formy.',progress:'Nie nadrabiaj opuszczonych sesji. Powrót do A/B dopiero po regeneracji.'}
+};
+const strengthDoses={
+  start:{label:'Start: więcej pracy nóg, bez ciężarów maksymalnych',main:{setsByExercise:{squat:3}},upper:{setsByExercise:{pulldown:3}}},
+  step:{label:'Kolejny krok tylko po dobrej regeneracji',main:{setsByExercise:{squat:3,rdl:3}},upper:{setsByExercise:{pulldown:3,press:3}}},
+  build:{label:'Budowanie siły bez dodatkowych ćwiczeń',main:{setsByExercise:{squat:3,rdl:3,calf:3}},upper:{setsByExercise:{pulldown:3,press:3}}},
+  deload:{label:'Dwa krótsze treningi, bez progresji',main:{name:'Całe ciało · lżej',target:'30–40 min',setsByExercise:{squat:2,rdl:2,press:1,row:1,calf:1,plank:1},effort:'Zapas 4–5 powtórzeń. Objętość zmniejszona, bez zwiększania ciężaru.',progress:'Bez progresji. Lekka sesja nie liczy się do dwóch zwykłych sesji kwalifikujących do większego ciężaru.'},upper:{name:'Góra i tułów · lżej',target:'25–30 min',setsByExercise:{pulldown:2,press:2,lateral:1,curl:1,sidePlank:1},effort:'Zapas 4–5 powtórzeń. Bez pracy do upadku.',progress:'Bez progresji i nadrabiania.'}},
+  return:{label:'Dwie serie i spokojny powrót',main:{target:'40–50 min',effort:'Zapas około 4 powtórzeń. Ostatni dobrze tolerowany ciężar lub niższy.',progress:'Utrzymaj ciężary, nie zwiększaj serii. Jeśli nie ma pełnej regeneracji po zawodach, pomiń trening.'},upper:{target:'30–40 min',effort:'Zapas około 4 powtórzeń.',progress:'Utrzymaj ciężary i 2 serie. Przy zmęczeniu pomiń sesję.'}},
+  maintain:{label:'Utrzymanie siły przy większej ilości biegania',main:{target:'40–50 min',effort:'Zapas 3–4 powtórzeń; wtorkowa góra około 4.',progress:'Po 2 serie. Nie dokładaj ciężaru nóg przy zwiększaniu trudności biegania. Przy zmęczeniu ogranicz nogi do 1 serii.'},upper:{target:'30–40 min',effort:'Zapas około 3 powtórzeń.',progress:'Utrzymuj siłę. Bez trzecich serii; nie nadrabiaj brakującej objętości.'}}
+};
+const strengthDoseByWeek=Object.fromEntries([
+  {weeks:[1],dose:'start'},
+  {weeks:[2,5,13,17,21,25],dose:'step'},
+  {weeks:[3,6,7,14,15,18,19,22,23,26],dose:'build'},
+  {weeks:[4,8,16,20,24,28,32,36],dose:'deload'},
+  {weeks:[9,10,11,12],dose:'return'},
+  {weeks:[27,29,30,31,33,34,35,37,38,39,40,41,42],dose:'maintain'}
+].flatMap(block=>block.weeks.map(week=>[week,block.dose])));
+const strengthReviewNotes={
+  1:'Jeśli technika jest nowa lub po przerwie 3 serie są zbyt dużą dawką, wykonaj 2. Piątek wolny.',
+  2:'Trzecia seria RDL i wyciskania w B tylko przy tolerancji poprzedniego tygodnia. Nie zwiększaj dziś również ciężaru.',
+  3:'Trzecia seria łydek tylko przy braku bolesności wpływającej na bieganie. Utrzymaj pozostałe obciążenia.',
+  9:'Bez nowych ćwiczeń i rekordów. Zachowaj A/B po 2 serie, zamiast kolejnego tygodnia niemal bez siłowni. Piątek wolny.',
+  10:'Tydzień startowy: bez siłowni.',
+  11:'Po zawodach wtorek i piątek wolne. Środa: wyłącznie opcjonalny, lekki trening góry po odzyskaniu świeżości.',
+  12:'Powrót do A/B po 2 serie tylko po regeneracji. Jeśli po zawodach nadal boli lub utrzymuje się zmęczenie, odpocznij.',
+  13:'Przegląd bazy. Opcjonalnie zamień goblet squat na wykrok w tył z podparciem (1–2 serie po 8–10 na nogę, przerwa 90–120 s). Zacznij lekko, z zapasem 4. Zamiana zastępuje przysiad, nie jest dodatkiem. Nie zmieniaj równocześnie innych ćwiczeń nóg.',
+  21:'Przegląd bazy: opcjonalnie wiosłowanie na wyciągu zastąp wersją z podparciem klatki, 2×8–12, przerwa 90 s. Jeśli obecny wariant daje postęp, zostaw go.',
+  29:'Wejście w teren: bez nowych ćwiczeń nóg; utrzymuj sprawdzoną bazę.',
+  38:'Odciążona siłownia przy końcowych długich biegach.',
+  39:'Najdłuższy bieg: tylko lekka wtorkowa sesja.',
+  40:'Przygotowanie do końcowego startu: tylko lekka wtorkowa sesja.',
+  41:'Bez siłowni.',
+  42:'Bez siłowni.'
+};
+const strengthWeekNotes=Object.fromEntries(Object.entries(strengthDoseByWeek).map(([week,dose])=>[week,[strengthDoses[dose].label,strengthReviewNotes[week]].filter(Boolean).join('. ')]));
+const strengthWeights={calf:'Masa ciała / do ustalenia',plank:'Masa ciała',sidePlank:'Masa ciała'};
+const strengthTableOverrides={
+  main:{},upper:{},
+  optional:{plank:{reps:'20 s'}},
+  light:{squat:{reps:'8'},rdl:{reps:'8'},press:{reps:'8'},row:{reps:'8'},calf:{reps:'12'},sidePlank:{reps:'20 s na stronę'}},
+  recovery:{pulldown:{reps:'8'},press:{reps:'8'},lateral:{reps:'12'},curl:{reps:'10'},sidePlank:{reps:'20 s na stronę'}}
+};
+function strengthSession(week,variant){
+  const template={...strengthTemplates[variant],...(strengthDoses[strengthDoseByWeek[week]][variant]||{})};
+  const exercises=template.exercises.map(id=>({id,...strengthExercises[id],sets:template.setsByExercise?.[id]??template.sets,weight:strengthWeights[id]||'Do ustalenia',...strengthTableOverrides[variant][id]}));
+  const description=[template.intro,'TEN TYDZIEŃ ('+week+')\n'+strengthWeekNotes[week],'WYSIŁEK\n'+template.effort,'PROGRESJA\n'+template.progress].join('\n\n');
+  return {...gym(template.name,template.target,description,template.optional),summary:template.intro,exercises,weekNote:strengthWeekNotes[week]};
+}
+const strengthByWeek=Object.fromEntries(weekMinutes.map((_,index)=>{
+  const week=index+1;
+  return [week,Object.fromEntries(Object.keys(strengthTemplates).map(variant=>[variant,strengthSession(week,variant)]))];
+}));
+const lighterWeekDays=Object.fromEntries([4,8,16,20,24,28,32,36].map(week=>[week,{tuesday:strengthByWeek[week].main,wednesday:strengthByWeek[week].upper,friday:rest()}]));
+const peakWeekDays=Object.fromEntries([38,39,40].map(week=>[week,{tuesday:strengthByWeek[week].light,wednesday:rest(),friday:rest()}]));
+const fridayRestDays=Object.fromEntries([1,2,3,4,9,10,11,12,33,34,35,36,37,38,39,40,41,42].map(week=>[week,{friday:rest()}]));
+const specialDays={
+  10:{monday:rest(),tuesday:easy(25),wednesday:rest(),thursday:easy(20),friday:rest(),saturday:gur,sunday:rest()},
+  11:{monday:rest(),tuesday:rest(),wednesday:strengthByWeek[11].recovery,thursday:easy(20),friday:rest(),saturday:long(35)},
+  41:{tuesday:rest(),wednesday:rest(),friday:rest()},
+  42:{monday:rest(),tuesday:easy(20),wednesday:rest(),thursday:rest(),friday:golden,saturday:rest(),sunday:rest()}
+};
+const weekDayOverrides=Object.fromEntries(weekMinutes.map((_,index)=>{
+  const week=index+1;
+  return [week,{...(lighterWeekDays[week]||{}),...(peakWeekDays[week]||{}),...(fridayRestDays[week]||{}),...(specialDays[week]||{})}];
+}));
+const dayOffsets={monday:0,tuesday:1,wednesday:2,thursday:3,friday:4,saturday:5,sunday:6};
+const addWeek=(week,plan)=>{
+  const ws=new Date(start);ws.setDate(ws.getDate()+(week-1)*7);
+  const days={monday:plan.monday,tuesday:strengthByWeek[week].main,wednesday:strengthByWeek[week].upper,thursday:plan.thursday,friday:strengthByWeek[week].optional,saturday:plan.saturday,sunday:rest(),...weekDayOverrides[week]};
+  Object.entries(days).forEach(([day,training])=>{const date=new Date(ws);date.setDate(date.getDate()+dayOffsets[day]);put(date,training)});
+};
+Object.entries(weeklyRunPlan).forEach(([week,plan])=>addWeek(Number(week),plan));
+const phases=[{from:1,to:10,name:'Jesień · spokojna baza',span:'tygodnie 1–10'},{from:11,to:26,name:'Zima · regularność',span:'tygodnie 11–26'},{from:27,to:39,name:'Wiosna · łagodny teren TPK',span:'tygodnie 27–39'},{from:40,to:42,name:'Odpoczynek przed startem',span:'tygodnie 40–42'}];
+const weekMilestones={4:'Lżejszy tydzień',8:'Lżejszy tydzień',9:'Spokojnie przed startem',10:'Garmin Ultra Race 12 km',11:'Regeneracja · opcjonalna lekka góra',12:'Lżejsze bieganie · powrót siłowni',13:'Przegląd ćwiczeń',16:'Lżejszy tydzień',20:'Lżejszy tydzień',21:'Przegląd ćwiczeń',24:'Lżejszy tydzień',27:'Pierwszy łagodny teren',28:'Lżejszy tydzień',29:'Przegląd bazy',32:'Lżejszy tydzień',33:'Pierwsze podbiegi',36:'Lżejszy tydzień',37:'Ocena celu 33 km',38:'Lżejszy tydzień',39:'Najdłuższy trening',40:'Mniej treningu przed startem',41:'Więcej odpoczynku',42:'Golden Mountains Trail 33 km'};
+const dayLabels={monday:'Pon',tuesday:'Wt',wednesday:'Śr',thursday:'Czw',friday:'Pt',saturday:'Sob',sunday:'Nd'};
+function dateStr(d){return d.toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit',year:'numeric'})}
+function categoryClass(training){return {Bieganie:'run',Siłownia:'gym',Odpoczynek:'rest',Zawody:'event'}[training.type]}
+const trainingLabels={Bieganie:training=>'Bieganie - '+training.name,Siłownia:training=>'Siłownia - '+training.name,Odpoczynek:training=>training.name,Zawody:training=>training.name};
+const displayName=training=>trainingLabels[training.type](training);
+const exerciseColumns=[{label:'Ćwiczenie',key:'name'},{label:'Powtórzenia / czas',key:'reps'},{label:'Ciężar',key:'weight'},{label:'Serie',key:'sets'},{label:'Odpoczynek między seriami',key:'rest'}];
+function textDetail(training){document.querySelector('#modalText').textContent=training.target+'\n\n'+training.description}
+function strengthDetail(training){
+  const table=document.createElement('table');table.className='exercise-table';
+  const header=table.createTHead().insertRow();
+  exerciseColumns.forEach(column=>{const cell=document.createElement('th');cell.scope='col';cell.textContent=column.label;header.appendChild(cell)});
+  const body=table.createTBody();
+  training.exercises.forEach(exercise=>{const row=body.insertRow();exerciseColumns.forEach(column=>{row.insertCell().textContent=exercise[column.key]})});
+  document.querySelector('#modalText').replaceChildren(table);
+}
+const detailRenderers={Bieganie:textDetail,Siłownia:strengthDetail,Odpoczynek:textDetail,Zawody:textDetail};
+function detail(title,training){document.querySelector('#modalDay').textContent=title;document.querySelector('#modalTitle').textContent=displayName(training);detailRenderers[training.type](training);document.querySelector('#modal').classList.add('show')}
+function render(){
+  let html='';
+  const now=new Date();
+  const startDay=Date.UTC(start.getFullYear(),start.getMonth(),start.getDate());
+  const todayDay=Date.UTC(now.getFullYear(),now.getMonth(),now.getDate());
+  const currentWeek=Math.max(1,Math.min(Object.keys(weeklyRunPlan).length,Math.floor((todayDay-startDay)/(7*86400000))+1));
+  Object.keys(weeklyRunPlan).forEach(weekKey=>{
+    const week=Number(weekKey),ws=new Date(start);
+    ws.setDate(ws.getDate()+(week-1)*7);
+    const weekEnd=new Date(ws);weekEnd.setDate(weekEnd.getDate()+6);
+    const phase=phases.find(item=>week>=item.from&&week<=item.to);
+    if(week===phase.from)html+=`<div class="phase">${phase.name} · ${phase.span}</div>`;
+    const milestone=weekMilestones[week];
+    html+=`<details ${week===currentWeek?'open':''}><summary><span class="week-title">Tydzień ${week}${milestone?` · <span class="milestone">${milestone}</span>`:''}</span><span class="week-meta">${dateStr(ws)} – ${dateStr(weekEnd)}</span></summary><div class="grid">`;
+    Object.entries(dayOffsets).forEach(([day,offset])=>{
+      const date=new Date(ws);date.setDate(date.getDate()+offset);
+      const training=trainingByDate[dateKey(date)];
+      const todayClass=dateKey(date)===dateKey(now)?' today':'';
+      const optionalClass=training.optional?' optional':'';
+      html+=`<div class="day ${categoryClass(training)}${optionalClass}${todayClass}" data-title="${dayLabels[day]} ${dateStr(date)}" data-date="${dateKey(date)}"><div class="dow">${dayLabels[day]}</div><div class="date">${dateStr(date)}</div><strong>${displayName(training)}</strong><b>${training.target}</b></div>`;
+    });
+    html+='</div></details>';
+  });
+  document.querySelector('#calendarBody').innerHTML=html;
+  document.querySelectorAll('.day').forEach(el=>el.onclick=()=>detail(el.dataset.title,trainingByDate[el.dataset.date]));
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active')});document.querySelector('.close').onclick=()=>document.querySelector('#modal').classList.remove('show');document.querySelector('#modal').onclick=e=>{if(e.target.id==='modal')e.currentTarget.classList.remove('show')};
+document.querySelector('.legend').insertAdjacentHTML('beforeend','<span><i style="background:#b52d59"></i>Zawody</span>');
+function updateToday(){const today=new Date();let date=new Date(today);let training=trainingByDate[dateKey(date)];let label='Dziś';if(!training&&today<start){date=new Date(start);training=trainingByDate[dateKey(date)];label='Najbliższy trening'}if(training){document.querySelector('#todayTitle').textContent=label+' · '+displayName(training);document.querySelector('#todayText').textContent=training.target+'. '+(training.summary||training.description)}else{document.querySelector('#todayTitle').textContent='Plan zakończony';document.querySelector('#todayText').textContent='Kalendarz obejmuje okres od 28.09.2026 do 18.07.2027.'}}
+render();updateToday();
+</script></body></html>
